@@ -15,3 +15,4 @@ def avaliable_time_slot() -> list[float]:
             return ls
         else:
             i += 1
+    print("Gotcha, thank you!")
