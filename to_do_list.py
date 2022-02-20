@@ -1,5 +1,10 @@
+"""A Interactive Python To-Do-List."""
+
+__author__ = "Nancy", "Valery", "Wendy"
+
 
 def things_to_do() -> list:
+    """get tasks from terminal and produce a to-do-list."""
     answer: str = input("Do you have any plan today?(Y/N)")
     ls = list()
     while answer.lower() == "y":
@@ -14,6 +19,7 @@ def things_to_do() -> list:
 
 
 def sort_importance(ls) -> list:
+    """Rearrange the list based on the importance."""
     length = len(ls)
     for i in range(0, length):
 
@@ -26,6 +32,7 @@ def sort_importance(ls) -> list:
 
 
 def main() -> None:
+    """The entry point of our program."""
     print("Hello!")
     time: float = float(input("What time is it now?(please enter the nearest 0.5 hr)"))
     ys1 = things_to_do()
@@ -63,11 +70,6 @@ def main() -> None:
         l += 1
     print("That is the end of today's list!")
     
-            
-
-
-    
-
 
 if __name__ == "__main__":
     main()
