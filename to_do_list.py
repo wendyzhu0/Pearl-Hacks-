@@ -1,47 +1,19 @@
-import copy
-
-def available_time_slot() -> list:
-    i: int = 0
-    ls = list()
-    while i < 1000:
-        print(f"====Please enter your {i + 1}th avaliable timeslot====")
-        start_time: float = float(input("Please enter the start time: "))
-        end_time: float = float(input("Please enter the end time: "))
-        xs: list[float] = [start_time, end_time]
-        ls.append(xs)
-        ask: str = input("Is that all?(Y/N)")
-        if ask.lower() == "y":
-            print("Gotcha, thank you!")
-            return ls
-        else:
-            i += 1
-    print(ls[0][0])
-    return ls
-    
 
 def things_to_do() -> list:
     answer: str = input("Do you have any plan today?(Y/N)")
     ls = list()
     while answer.lower() == "y":
         task: str = input("Please enter your task: ")
-        impt: int = int(input("Please enter the importance of this task, scale lowest=1, highest=5: "))
-        dur: float = float(input("Please enter duration of this task in hour: "))
-        ddl: float = float(input("Please enter the deadline of this task in 24hr: "))
-        tu = (task, impt, dur, ddl)
+        impt: int = int(input("Please enter the importance of this task, scale lowest=1, highest=4: "))
+        ddl: float = float(input("Please enter the deadline of this task in hour: "))
+        tu = (task, impt, ddl)
         ls.append(tu)
         answer = input("Do you have anything else to do?(Y/N)")
     print("Gotcha, thank you!")
     return ls
 
 
-def get_time_interval(ls: list) -> list[float]:
-    xs = list()
-    for items in ls:
-        xs.append(items[1] - items[0])
-    return xs
-
-
-def sort_importance(ls):
+def sort_importance(ls) -> list:
     length = len(ls)
     for i in range(0, length):
 
@@ -53,80 +25,48 @@ def sort_importance(ls):
     return ls
 
 
-def duration_matches(start: list, ls: list, at: list) -> list:
-    strt = copy.deepcopy(start)
-    sum: int = 0
-    length = len(ls)
-    while length > 0:
-        length -= 1
-        sum += length 
-    for i in range(0, len(ls) - 1):
-        ti = ls[i][2]
-        j = 0
-        while ti > at[j]:
-            ti = ti - at[j]
-            j += 1
-            if j == len(at):
-                break
-        if j > len(at):
-            exit("total time needed exceed avaliable time slot.")
-        else:
-            count: int = 0
-            end_time = strt[j - 1][0] + ti
-        
-            if end_time <= ls[i][3]:
-                strt[j - 1][0] = end_time
-            else:
-                if i < 0: 
-                    exit(f"Sorry. You can finish {ls[i][0]} before {ls[i][3]}. ")
-                else:
-                    ls = swap_positions(ls, i, i - 1)
-                    count += 1
-        if count > sum:
-            print("Sorry,You cannot finish everything in the given time")
-        return ls   
-    return ls
-    
-
-def swap_positions(a_list: list, pos1: int, pos2: int) -> list[int]:
-    a_list[pos1], a_list[pos2] = a_list[pos2], a_list[pos1]
-    return a_list
-
-
-def ti_calculator(ls: list, start: list, at: list) -> list:
-    i: int = 0
-    end_time = list()
-    while i < len(ls):
-        ti = ls[i][2]
-        j: int = 0
-        while ti > at[j]:
-            ti = ti - at[j]
-            j += 1
-        end_time.append(start[j - 1][0] + ti)
-        i += 1
-    return end_time
-
-
 def main() -> None:
     print("Hello!")
-    us = available_time_slot()
+    time: float = float(input("What time is it now?(please enter the nearest 0.5 hr)"))
     ys1 = things_to_do()
-    zs = get_time_interval(us)
+    if ys1 == list():
+        exit("Bye, have a nice day!")
     ys2 = sort_importance(ys1)
-    ys3 = duration_matches(us, ys2, zs)
-    end_time = ti_calculator(ys3, us, zs)
+    count: int = 0
+    print("===Important and Urgent===")
     i: int = 0
-    while i < len(end_time):
-        if i == 0:
-            print(f"Task {i + 1}: " + ys3[i][0])
-            print("Start time: " + str(us[0][0]))
-            print("End time: " + str(end_time[0]))
-            i += 1
-        else:
-            print(f"Task {i + 1}: " + ys3[i][0])
-            print("Start time: " + str(end_time[i - 1]))
-            print("End time: " + str(end_time[i]))
-            i += 1
+    while i < len(ys2):
+        if (ys2[i][1] == 4 or ys2[i][1] == 3) and (ys2[i][2] - time < 5):
+            count += 1
+            print(f"{count}th task: " + ys2[i][0])
+        i += 1   
+    print("===Important but Not Urgent===")
+    j: int = 0
+    while j < len(ys2):
+        if (ys2[j][1] == 4 or ys2[j][1] == 3) and (ys2[j][2] - time >= 5):
+            count += 1
+            print(f"{count}th task: " + ys2[j][0])
+        j += 1
+    print("===Unimportant but Urgent===")
+    k: int = 0
+    while k < len(ys2):
+        if (ys2[k][1] == 2 or ys2[k][1] == 1) and (ys2[k][2] - time < 5):
+            count += 1
+            print(f"{count}th task: " + ys2[k][0])
+        k += 1
+    print("===Unimportant and Not Urgent===")
+    l: int = 0
+    while l < len(ys2):
+        if (ys2[l][1] == 2 or ys2[l][1] == 1) and (ys2[l][2] - time >= 5):
+            count += 1
+            print(f"{count}th task: " + ys2[l][0])
+        l += 1
+    print("That is the end of today's list!")
+    
+            
+
+
+    
 
 
 if __name__ == "__main__":
